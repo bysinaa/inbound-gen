@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Inbound Gen</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div><span class="eyebrow">LOCAL WINDOWS LAB</span><h1>Inbound Gen</h1></div>
+      <div id="connectionBadge" class="badge muted">سرور متصل نیست</div>
+    </header>
+
+    <section class="card" id="connectCard">
+      <div class="section-title"><b>۱. اتصال و تشخیص سرور</b><span>رمز فقط در حافظه این برنامه می‌ماند.</span></div>
+      <div class="grid four">
+        <label>آدرس سرور<input id="host" autocomplete="off" placeholder="203.0.113.10"></label>
+        <label>پورت SSH<input id="sshPort" type="number" value="22"></label>
+        <label>کاربر SSH<input id="username" autocomplete="username" value="root"></label>
+        <label>رمز SSH<input id="password" type="password" autocomplete="current-password"></label>
+      </div>
+      <div id="trustBox" class="trust hidden">
+        <div>Fingerprint سرور:</div><code id="fingerprint"></code>
+        <button id="trustButton" class="secondary">این کلید را تأیید و متصل شو</button>
+      </div>
+      <div class="actions"><button id="detectButton">تشخیص خودکار 3x-ui</button><span id="detectStatus" class="status"></span></div>
+      <div id="serverFacts" class="facts hidden"></div>
+    </section>
+
+    <section class="card disabled" id="smartCard">
+      <div class="section-title"><b>ساخت هوشمند از روی دامنه‌ها</b><span>تشخیص Direct/CDN · دریافت SSL · تنظیم خودکار Address/Host/SNI · توقف روی اولین نتیجه موفق</span></div>
+      <div class="grid two">
+        <label>دامنه‌ها (هر خط یک دامنه)<textarea id="smartDomains" rows="5" placeholder="direct.example.com&#10;cdn.example.com"></textarea></label>
+        <label>آدرس‌های تمیز CDN<input id="cleanAddresses" value="www.speedtest.net" placeholder="www.speedtest.net"></label>
+      </div>
+      <div class="actions"><button id="smartButton">بساز و هوشمند تست کن</button><span id="smartStatus" class="status"></span></div>
+      <div id="smartResult" class="result hidden"></div>
+    </section>
+
+    <section class="card disabled" id="buildCard">
+      <div class="section-title"><b>۲. ساخت و تست inbound</b><span>موفق: فعال می‌ماند · ناموفق: خودکار غیرفعال می‌شود</span></div>
+      <div class="grid three">
+        <label>الگو<select id="template">
+          <option value="vless-httpupgrade-none">VLESS · HTTPUpgrade · بدون TLS</option>
+          <option value="vless-ws-tls">VLESS · WebSocket · TLS</option>
+          <option value="vless-xhttp-tls">VLESS · XHTTP · TLS</option>
+          <option value="vless-reality-tcp">VLESS · TCP · REALITY</option>
+          <option value="vmess-ws-tls">VMess · WebSocket · TLS</option>
+          <option value="trojan-ws-tls">Trojan · WebSocket · TLS</option>
+          <option value="trojan-tcp-tls">Trojan · TCP · TLS</option>
+        </select></label>
+        <label>نام inbound<input id="remark" placeholder="VLESS | WS TLS | Direct | 443"></label>
+        <label>پورت inbound (۰ = خودکار)<input id="inboundPort" type="number" min="0" max="65535" value="0" list="knownPorts"><datalist id="knownPorts"><option value="443"><option value="8080"><option value="2053"><option value="2096"><option value="8443"><option value="80"></datalist></label>
+        <label>Address داخل لینک<input id="address" placeholder="direct.example.com"></label>
+        <label>Host<input id="hostHeader" placeholder="cdn.example.com"></label>
+        <label>SNI<input id="sni" placeholder="cdn.example.com"></label>
+        <label>Path<input id="path" value="/"></label>
+        <label>Fingerprint<select id="fp"><option>chrome</option><option>firefox</option><option>safari</option><option>android</option></select></label>
+        <label class="tls">مسیر fullchain روی سرور<input id="certificate" placeholder="/root/cert/example.com/fullchain.pem"></label>
+        <label class="tls">مسیر private key روی سرور<input id="privateKey" placeholder="/root/cert/example.com/privkey.pem"></label>
+        <label class="reality hidden">REALITY target<input id="realityTarget" placeholder="www.microsoft.com:443"></label>
+        <label class="xhttp hidden">XHTTP mode<select id="mode"><option>auto</option><option>packet-up</option><option>stream-up</option><option>stream-one</option></select></label>
+      </div>
+      <div class="actions"><button id="createButton">بساز و ۳ بار تست کن</button><span id="createStatus" class="status"></span></div>
+      <div id="result" class="result hidden"></div>
+    </section>
+
+    <section class="card disabled" id="listCard">
+      <div class="section-title"><b>۳. inboundهای پنل</b><button id="refreshButton" class="ghost">بروزرسانی</button></div>
+      <div class="table-wrap"><table><thead><tr><th>نام</th><th>پروتکل</th><th>پورت</th><th>وضعیت</th></tr></thead><tbody id="inboundRows"></tbody></table></div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
